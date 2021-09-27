@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <title>Fetch using MySQL and Node.js</title>
+  <script type=text/javascript>
+      alert("KK");
+    let div=document.getElementById("open");
+    if(divop.length!==0){
+      console.log(divop);
+      div.style.display="block";
+    }
+  </script>
+  <style>
+      @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+  background: #f2f2f2;
+  font-family: 'Open Sans', sans-serif;
+}
+.header{
+  width: 100%;
+  height: 5%;
+  background-color: black;
+}
+
+.logo img{
+  width: 10%;
+  height: 5%;
+}
+.search {
+  width: 30%;
+  position: relative;
+  display: flex;
+}
+.searchindustry {
+  width: 50%;
+  border: 3px solid #00B4CC;
+  border-right: 3px;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 5px 0 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+.searchloc {
+  width: 50%;
+  border: 3px solid #00B4CC;
+  border-right:3px;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 5px 0 5px;
+  outline: none;
+  color: #9DBFAF;
+  margin-left: 300px;
+}
+
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchButton {
+  width: 40px;
+  height: 36px;
+  border: 1px solid #00B4CC;
+  background: #00B4CC;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/*Resize the wrap to see the search bar change!*/
+.wrap{
+  width: 30%;
+  position: relative;
+  margin-top: 80px;
+  margin-left: 80px;
+  transform: translate(-50%, -50%);
+}
+      .table-data{
+        height:30%;
+        margin-top: 1%;
+        margin-left: 80px;
+        margin-right: 80px;
+        overflow-y: scroll;
+        overflow-x: scroll;
+      }
+      .styled-table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 50px;
+    
+    font-size: 0.9em;
+    font-family: sans-serif;
+    width:5em;
+    height:10em;
+    
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+.searchButton{
+    height: 25px;
+    width: 50px;
+}
+
+.paginator{
+  display: inline-block;
+  width: 70%;
+  height:25%;
+  margin-top:1%;
+  margin-left:10%;
+  
+}
+.pagination a {
+  color: black;
+  float: left;
+  padding: 16px 16px;
+  text-decoration: none;
+}
+.container {
+  width:50%;
+  background: #ccc;
+  margin-top:0.6% ;
+  padding: 16px;
+}
+
+.wrapper {
+  margin: 8px 0;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: flex-start;
+}
+
+input {
+  min-width: 20px;
+  padding: 8px;
+  margin: 0 4px 0 0;
+  border: 1px solid #666;
+  border-radius: 5px;
+  height: 30px;
+}
+
+.button {
+  padding: 8px 16px;
+  min-height: 48px;
+  min-width: 10px;
+  word-wrap: nowrap;
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 5px;
+}
+
+input {
+    order: 0;
+    align-self: auto;  
+}
+
+.search {
+  flex: 2 1 auto;
+}
+
+.date-from {
+  flex: 1 1 auto;
+}
+
+.date-to {
+  flex: 1 1 auto;
+}
+
+.button {
+    order: 4;
+    flex: 0 1 auto;
+    align-self: auto;
+}
+
+  </style>
+</head>
+<body>
+    <div>
+    <div class="header">
+      <div class="logo">
+        <img src="https://storage.googleapis.com/gcloud-app-323810/public/maxedS-logo.jpg">
+      </div>
+    </div>
+        <div class="container">
+            <form action="/displayDb" method="GET">
+            
+              <div class="wrapper">
+                <p>Filters</p>
+                <div class="search-container">
+                  <input type="text"  placeholder="Industry" name="industry">
+                  <input type="text"  placeholder="Location" name="location">
+                  <input type="text"  placeholder="Company" name="companyname">
+                  <input type="text"  placeholder="Name" name="name">
+                  <input type="text"  placeholder="Title" name="title">
+                  <button type="submit" class="button">Search</button>
+                </div>
+              </div>
+              
+              
+            </form>
+              <div class="Downbutt">
+                <a href="/downlDb" >Download</a>
+              </div>
+            </div>
+    
+    <div class="table-data">
+    <table class="styled-table" >
+        <tr>
+            <th>S.N</th>
+            <th>Company</th>
+            <th>Website</th>
+            <th>ContactName</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>title</th>
+            <th>email</th>
+            <th>country</th>
+            <th>companyPhoneno</th>
+            <th>industry</th>
+            <th>employees</th>
+        </tr>
+        
+        <%
+        if(userData.length!=0){
+        
+        userData.forEach(function(data){
+        %>
+        <tr class="active-row">
+            <td><%=numrow+1; %></td>
+            <td><%=data.company %></td>
+            <td><%=data.website %></td>
+            <td><%=data.contactname %></td>
+            <td><%=data.firstname %></td>
+            <td><%=data.lastname %></td>
+            <td><%=data.title %></td>
+            <td><%=data.email %></td>
+            <td><%=data.country %></td>
+            <td><%=data.companyPhoneno %></td>
+            <td><%=data.industry %></td>
+            <td><%=data.employees %></td>
+            
+        </tr>
+        <%  numrow++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+    </table>
+    </div>
+    <div class="paginator">
+        <% if(page > 1) { %> <a method="get" href="<%=addr%><%=page-1%>">Before</a> <% } %>
+        <% for(let i = iterator; i <= endingLink; i++) { %>
+            <a method="get"  href="<%=addr%><%=i%>"> <%=i%> </a>
+            <% } %>
+            <% if(page < numberOfPages) { %> <a method="get" href="<%=addr%><%=page+1%>"> After </a> <% } %>
+        </div>
+    </div>
+</body>
+</html>

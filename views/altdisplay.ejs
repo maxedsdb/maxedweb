@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <title>Fetch using MySQL and Node.js</title>
+  <style>
+      @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+  background: #f2f2f2;
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+.tb
+{
+    display: table;
+    width: 100%;
+}
+
+.td
+{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+input, button
+{
+    color: #fff;
+    font-family: Nunito;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+}
+
+#cover
+{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    width: 550px;
+    padding: 35px;
+    margin: -83px auto 0 auto;
+    background-color: #ff7575;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px #ff7c7c, 0 0 0 20px #ffffffeb;
+    transform: scale(0.6);
+}
+
+form
+{
+    height: 96px;
+}
+
+input[type="text"]
+{
+    width: 100%;
+    height: 96px;
+    font-size: 60px;
+    line-height: 1;
+}
+
+input[type="text"]::placeholder
+{
+    color: #e16868;
+}
+
+#s-cover
+{
+    width: 1px;
+    padding-left: 35px;
+}
+
+button
+{
+    position: relative;
+    display: block;
+    width: 84px;
+    height: 96px;
+    cursor: pointer;
+}
+
+#s-circle
+{
+    position: relative;
+    top: -8px;
+    left: 0;
+    width: 43px;
+    height: 43px;
+    margin-top: 0;
+    border-width: 15px;
+    border: 15px solid #fff;
+    background-color: transparent;
+    border-radius: 50%;
+    transition: 0.5s ease all;
+}
+
+button span
+{
+    position: absolute;
+    top: 68px;
+    left: 43px;
+    display: block;
+    width: 45px;
+    height: 15px;
+    background-color: transparent;
+    border-radius: 10px;
+    transform: rotateZ(52deg);
+    transition: 0.5s ease all;
+}
+
+button span:before, button span:after
+{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 45px;
+    height: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    transform: rotateZ(0);
+    transition: 0.5s ease all;
+}
+
+#s-cover:hover #s-circle
+{
+    top: -1px;
+    width: 67px;
+    height: 15px;
+    border-width: 0;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+#s-cover:hover span
+{
+    top: 50%;
+    left: 56px;
+    width: 25px;
+    margin-top: -9px;
+    transform: rotateZ(0);
+}
+
+#s-cover:hover button span:before
+{
+    bottom: 11px;
+    transform: rotateZ(52deg);
+}
+
+#s-cover:hover button span:after
+{
+    bottom: -11px;
+    transform: rotateZ(-52deg);
+}
+#s-cover:hover button span:before, #s-cover:hover button span:after
+{
+    right: -6px;
+    width: 40px;
+    background-color: #fff;
+}
+
+#ytd-url {
+  display: block;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  padding: 10px 14px;
+  margin: 20px;
+  color: #fff;
+  font-family: Nunito;
+  font-size: 14px;
+  text-decoration: none;
+  background-color: #ff7575;
+  border-radius: 4px;
+  box-shadow: 0 10px 20px -5px rgba(255, 117, 117, 0.86);
+  z-index: 125;
+}
+.search {
+  width: 30%;
+  position: relative;
+  display: flex;
+}
+.searchloc{
+    width: 30%;
+    position: relative;
+    margin-left: 60px;
+}
+.searchTerm {
+  width: 50%;
+  border: 3px solid #00B4CC;
+  border-right: none;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchButton {
+  width: 40px;
+  height: 36px;
+  border: 1px solid #00B4CC;
+  background: #00B4CC;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/*Resize the wrap to see the search bar change!*/
+.wrap{
+  width: 30%;
+  position: relative;
+  margin-top: 80px;
+  margin-left: 80px;
+  transform: translate(-50%, -50%);
+}
+      .table-data{
+        height:700px;
+        margin-top: 100px;
+        margin-bottom: 40px;
+        margin-left: 80px;
+        margin-right: 80px;
+        overflow-y: scroll;
+        overflow-x: scroll;
+      }
+      .styled-table {
+    border-collapse: collapse;
+    margin: 10px 1px;
+    
+    font-size: 0.9em;
+    font-family: sans-serif;
+    width:5em;
+    height:10em;
+    
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+.searchButton{
+    height: 25px;
+    width: 50px;
+}
+
+#paginator{
+    margin-left: 150px;
+}
+  </style>
+</head>
+<body>
+    <div>
+            <div class="search">
+                <form method ="get" action="/displayDb">
+               <input type="text" class="searchTerm" id="companyBar" placeholder="Industry" name="companyname">
+               <input type="submit" class="searchButton" value="go">
+                
+            </form>
+            </div>
+            <div class="searchloc">
+                <form method ="get" action="/displayDb">
+               <input type="text" class="searchTerm" id="companyBar" placeholder="Location" name="location">
+               <input type="submit" class="searchButton" value="go">
+                
+            </form>
+            </div>
+    <div class="table-data">
+    <table class="styled-table" >
+        <tr>
+            <th>S.N</th>
+            <th>Company</th>
+            <th>Website</th>
+            <th>ContactName</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>title</th>
+            <th>email</th>
+            <th>country</th>
+            <th>companyPhoneno</th>
+            <th>industry</th>
+            <th>employees</th>
+        </tr>
+        
+        <%
+        if(userData.length!=0){
+        
+        userData.forEach(function(data){
+        %>
+        <tr class="active-row">
+            <td><%=numrow; %></td>
+            <td><%=data.company %></td>
+            <td><%=data.website %></td>
+            <td><%=data.contactname %></td>
+            <td><%=data.firstname %></td>
+            <td><%=data.lastname %></td>
+            <td><%=data.title %></td>
+            <td><%=data.email %></td>
+            <td><%=data.country %></td>
+            <td><%=data.companyPhoneno %></td>
+            <td><%=data.industry %></td>
+            <td><%=data.employees %></td>
+            
+        </tr>
+        <%  numrow++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+    </table>
+    </div>
+    <div id="paginator">
+        <% if(page > 1) { %> <a href="<%=addr%><%=page-1%>">Before</a> <% } %>
+        <% for(let i = iterator; i <= endingLink; i++) { %>
+            <% if(i === page) { %>
+            <a method="post" class="selectedLink" href="<%=addr%><%=i%>"> <%=i%> </a>
+            <% continue; %>
+        <% } %>
+            <a method="post" href="<%=addr%><%=i%>"> <%=i%> </a>
+            <% } %>
+            <% if(page < numberOfPages) { %> <a href="<%=addr%><%=page+1%>"> After </a> <% } %>
+        </div>
+    </div>
+    
+</body>
+</html>
