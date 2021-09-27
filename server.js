@@ -13,7 +13,7 @@ const Json2csvParser = require("json2csv").Parser;
 var csvjson = require('csvtojson');
 const { title, mainModule } = require('process');
 const db = require('./connection');
-const port = 3000;
+const port = process.env.PORT || 3000;
 const emailArray = [];
 const resultsPerPage = 20;
 const upload = multer({ dest: __dirname + '/upload' });
@@ -246,4 +246,5 @@ var update_query=(fields)=>{
 //   });
 // }
 
+app.listen(port,()=>console.log("port connected"));
 
