@@ -56,7 +56,7 @@ app.post('/createDB', upload.single("csvDb"), (req, res) => {
   var out = [];
   // csv parsing
   filePath = __dirname + '/upload/' + req.file.filename;
-  let query = `LOAD DATA INFILE 'db.tsv' INTO TABLE mardb FIELDS TERMINATED BY '\t'  LINES TERMINATED BY '\r\n' IGNORE 1 LINES`;
+  let query = `LOAD DATA LOCAL INFILE 'db.tsv' INTO TABLE mardb FIELDS TERMINATED BY '\t'  LINES TERMINATED BY '\r\n' IGNORE 1 LINES`;
   db.query(query, (error, response) => {
     console.log(error || response);
   });
